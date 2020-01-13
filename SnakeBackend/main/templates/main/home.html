@@ -1,0 +1,30 @@
+{% extends 'main/header.html' %}
+
+{% block content %}
+  {% load static %}
+  <div class="row">
+    {% for topic in topics %}
+      <div class="col">
+        <div class="card hoverable" style="max-width: 400px">
+          <div class="card-image">
+            <img src="{% static topic.picture %}" alt="analyzer picture" style="filter: brightness(50%)"/>
+            <span class="card-title">
+              {{ topic.title }}
+            </span>
+          </div>
+          <div class="card-content">
+            <div class="row">
+              {{ topic.content }}
+            </div>
+            <div class="card-action"
+                 style="justify-content: space-between; flex-direction: column; height: 100%; display: flex">
+              <div style="justify-content: flex-end; display: flex">
+                <a href="{{ topic.link }}" class="btn">Go there <i class="material-icons right">send</i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}

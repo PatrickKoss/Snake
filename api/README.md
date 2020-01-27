@@ -1,6 +1,6 @@
-# RESTful API
+# Socket IO Server
 
-> The RESTful API with CRUD resources for scenarios, built with TypeScript and Express.js
+> The Socket io server side for the snake game, built with TypeScript and Express.js and Socket io
 
 ## Structure
 
@@ -13,20 +13,12 @@
 
 -   Install Node.js: <https://nodejs.org/en/download/>
 -   Run `npm install` in this directory to install dependencies of this project
--   Install MongoDB and start it on port 27017 (URL and port required by the API are adjustable via setting the ENV variable `DB_HOST`)
-    -   Standalone executable: <https://www.mongodb.com/download-center/v2/community>
-    -   Docker example: `docker run --name ms-scenario-evaluation-db -p 27017:27017 -d mongo:4`
--   Run `npm start`
-    -   API will be available at <http://localhost:3000>
-    -   Swagger UI will be available at <http://localhost:3000/api-docs>
 
 ## Environment Variables for Configuration
 
 The following ENV variables can be used to override the defaults:
 
 -   `PORT`: the port the API runs on (default: `3000`)
--   `DB_HOST`: the host (or IP) and port for the used MongoDB instance (default: `localhost:27017`)
--   `DB_NAME`: the name of the used MongoDB collection (default: `sbs-evaluation`)
 
 ## Detailed Build Setup and Commands
 
@@ -48,12 +40,4 @@ npm run lint
 
 # run tests
 npm test
-
-# run SonarQube analysis (you need to pass parameters for the URL and token)
-npm run sonar
 ```
-
-## TODOs
-
--   [ ] Fix test
--   [ ] Investigate mongoose issues and upgrade to newest version

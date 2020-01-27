@@ -1,4 +1,4 @@
-# main-website
+# Snake Frontend
 
 ## Project setup
 ```

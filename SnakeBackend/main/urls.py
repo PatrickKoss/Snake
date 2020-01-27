@@ -5,6 +5,6 @@ from . import views
 app_name = 'main'
 
 urlpatterns = [
-    url(r'^another/', views.MyOwnView.as_view()),
-    url(r'^game-field/', views.GameFieldRest.as_view())
+    url(r'^send-snake-data/', views.SendSnakeData.as_view()),
+    url(r'^predict-snake-direction/', views.PredictSnakeDirection.as_view()),
 ]

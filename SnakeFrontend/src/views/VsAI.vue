@@ -1,36 +1,24 @@
 <template>
   <v-row no-gutters>
-
+    <GameContext :mode="'VsAI'"/>
   </v-row>
 </template>
 
 <script>
-  import {Vue, Component} from 'vue-property-decorator'
-  import { Socket } from 'vue-socket.io-extended'
+  import {Component, Vue} from 'vue-property-decorator';
+  import GameContext from "../components/GameContext";
 
-  @Component
+  @Component({
+    components: {
+      GameContext
+    }
+  })
   class VsAI extends Vue {
-    @Socket('clicked')  // --> listens to the event with given name, e.g. `tweet`
-    clicked (message) {
-      // eslint-disable-next-line no-console
-      console.log(message);
-    }
-
+    /**
+     * the the game mode on server side to vsAI
+     */
     mounted() {
-      this.$socket.client.connect();
-      this.$socket.client.emit('connected', "connected");
-      window.addEventListener('keydown', this.keyDown, false);
-    }
-
-    keyDown(e) {
-      // eslint-disable-next-line no-console
-      console.log(e.key);
-      this.$socket.client.emit(e.key, e.key);
-    }
-
-    beforeDestroy() {
-      window.removeEventListener("keydown", this.keyDown, false);
-      this.$socket.client.disconnect();
+      this.$socket.client.emit('vsAI');
     }
   }
 

@@ -1,5 +1,6 @@
 import { Request, Response, Router } from "express";
 
+// basic router for initialising the express app
 const router = Router();
 
 router.get("/status", (req: Request, res: Response) => {

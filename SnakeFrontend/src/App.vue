@@ -1,13 +1,8 @@
 <template>
-  <v-app>
-    <v-app-bar app elevate-on-scroll color="primary" dark>
-      <v-toolbar-title @click="goToHome()" id="toolbarTitle">Snake</v-toolbar-title>
-      <v-spacer></v-spacer>
+  <v-app v-bind:class="{ dark: state.dark, light: !state.dark }">
+    <Toolbar/>
 
-      <v-btn icon @click="goToDataProtection()">
-        <v-icon>mdi-shield-half-full</v-icon>
-      </v-btn>
-    </v-app-bar>
+    <NavigationDrawer/>
 
     <!-- Sizes your content based upon application components -->
     <v-content>
@@ -16,33 +11,54 @@
       <v-container fluid>
 
         <!-- If using vue-router -->
-        <router-view></router-view>
+        <router-view/>
       </v-container>
     </v-content>
 
     <v-footer app>
       <!-- -->
     </v-footer>
+
+    <MessageSnackbar/>
   </v-app>
 </template>
 
 <script>
-  import {Vue, Component} from 'vue-property-decorator'
+  import {Component, Vue} from 'vue-property-decorator'
+  import NavigationDrawer from "./components/NavigationDrawer";
+  import {UserRestClient} from "./model/UserRestClient";
+  import Toolbar from "./components/Toolbar";
+  import MessageSnackbar from "./components/MessageSnackbar";
 
-  @Component
-  class App extends Vue {
-    goToDataProtection() {
-      this.$router.push("/data-protection")
+  @Component({
+    components: {
+      NavigationDrawer,
+      Toolbar,
+      MessageSnackbar
     }
+  })
+  class App extends Vue {
+    state = this.$store.state;
 
-    goToHome() {
-      this.$router.push("/")
+    async created() {
+      // set the state token according to the local storage token
+      if (localStorage.token !== undefined) this.state.token = localStorage.token;
+      let response = await new UserRestClient().getAuthenticated();
+      if (response.message.messageType === "error") {
+        localStorage.token = undefined;
+        this.state.token = "";
+      } else {
+        this.state.user = response.user;
+      }
+
+      // set the state dark according to the local storage dark
+      this.state.dark = localStorage.dark === 'true';
     }
   }
 
   export default App
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
   #app {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -63,6 +79,7 @@
       }
     }
   }
+
   #toolbarTitle {
     cursor: pointer;
   }

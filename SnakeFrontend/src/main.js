@@ -5,6 +5,7 @@ import router from './router'
 import store from './store'
 import VueSocketIOExt from 'vue-socket.io-extended';
 import io from 'socket.io-client';
+import Vuelidate from 'vuelidate';
 
 Vue.config.productionTip = false;
 const socket = io('http://localhost', {
@@ -14,6 +15,7 @@ const socket = io('http://localhost', {
   reconnectionAttempts: Infinity
 });
 Vue.use(VueSocketIOExt, socket);
+Vue.use(Vuelidate);
 
 new Vue({
   vuetify,

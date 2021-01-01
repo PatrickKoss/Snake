@@ -1,0 +1,45 @@
+version: "3"
+services:
+  db:
+    image: "postgres"
+    environment:
+      - "POSTGRES_HOST_AUTH_METHOD=trust"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+
+  snakefrontend:
+    container_name: snakefrontend
+    build:
+      context: ./SnakeFrontend
+      dockerfile: ./Dockerfile
+    ports:
+      - 80:80
+    environment:
+      - VUE_APP_BACKEND_URL=http://0.0.0.0:8000
+      - VUE_APP_API_URL=http://localhost:3000
+    depends_on:
+      - snakeapi
+      - snakebackend
+  snakebackend:
+    container_name: snakebackend
+    build:
+      context: ./SnakeBackend
+      dockerfile: ./Dockerfile
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    command: bash -c 'python manage.py makemigrations && python manage.py migrate && gunicorn SnakeBackend.wsgi -b 0.0.0.0:8000'
+  snakeapi:
+    container_name: snakeapi
+    build:
+      context: ./api
+      dockerfile: ./Dockerfile
+    ports:
+      - 3000:3000
+#    environment:
+#      - VUE_APP_BACKEND_URL=http://localhost:8000
+    depends_on:
+      - snakebackend
+volumes:
+  postgres_data:

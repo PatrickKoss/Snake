@@ -78,7 +78,9 @@ class GetScoreboard(APIView):
         scoreboard = Scoreboard.objects.all()
         # if the category is in the params filter scores according to the category
         # first check if the category is valid
-        category = SnakeCategories.objects.get(category=self.request.query_params['category'])
+        category = ""
+        if 'category' in self.request.query_params:
+            category = SnakeCategories.objects.get(category=self.request.query_params['category'])
         if category is not None:
             if 'category' in self.request.query_params:
                 scoreboard = Scoreboard.objects.filter(category__category=self.request.query_params['category'])

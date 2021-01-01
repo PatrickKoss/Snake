@@ -20,6 +20,7 @@
     </v-footer>
 
     <MessageSnackbar/>
+    <CookieBanner />
   </v-app>
 </template>
 
@@ -29,12 +30,14 @@
   import {UserRestClient} from "./model/UserRestClient";
   import Toolbar from "./components/Toolbar";
   import MessageSnackbar from "./components/MessageSnackbar";
+  import CookieBanner from "./components/CookieBanner";
 
   @Component({
     components: {
       NavigationDrawer,
       Toolbar,
-      MessageSnackbar
+      MessageSnackbar,
+      CookieBanner,
     }
   })
   class App extends Vue {
@@ -53,6 +56,9 @@
 
       // set the state dark according to the local storage dark
       this.state.dark = localStorage.dark === 'true';
+
+      // trick the login mistake
+      await new UserRestClient().login({username: "", email:"", password:""});
     }
   }
 

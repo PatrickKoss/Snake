@@ -66,7 +66,7 @@
           </v-btn>
         </v-col>
         <v-col align="end" justify="end">
-          <v-btn @click="submit()" color="primary" type="submit">
+          <v-btn @click="submit()" color="primary">
             <span v-if="mode === 'registration'">Register</span>
             <span v-if="mode === 'accountUpdate'">Update Account</span>
           </v-btn>
@@ -112,6 +112,18 @@
 
     @Validate({required, minLength: minLength(6), sameAs: sameAs('password')})
     passwordConfirm = '';
+
+    mounted() {
+      window.addEventListener('keydown', this.keyDown, false);
+    }
+
+    /**
+     * check if enter was clicked to submit
+     * @param e
+     */
+    keyDown(e) {
+      if (e.key === "Enter") this.submit();
+    }
 
     /**
      * check if the input values are correct and send data to the backend
@@ -184,6 +196,13 @@
         this.username = this.state.user.username;
         this.email = this.state.user.email;
       }
+    }
+
+    /**
+     * clean up logic
+     */
+    beforeDestroy() {
+      window.removeEventListener("keydown", this.keyDown, false);
     }
   }
 

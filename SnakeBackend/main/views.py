@@ -8,7 +8,7 @@ import pandas as pd
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from SnakeBackend.settings import STATIC_ROOT
+from SnakeBackend.settings import STATIC_ROOT, BASE_DIR
 
 
 # saving learning data in a csv file
@@ -33,26 +33,54 @@ class SendSnakeData(APIView):
 class PredictSnakeDirection(APIView):
     def post(self, request):
         data = json.loads(request.body)
+        module_dir = os.path.dirname(__file__)
         # testing out different classifier. KNeighbors seem to work best
-        filename = os.path.join(STATIC_ROOT, 'main/data/LinearRegressionClassifier.sav')
-        filename_KNeighbors = os.path.join(STATIC_ROOT, 'main/data/KNeighborsClassifier.sav')
-        filename_SVM = os.path.join(STATIC_ROOT, 'main/data/SVMClassifier.sav')
-        clf_KNeighbors = pickle.load(open(filename_KNeighbors, 'rb'))
-        clf = pickle.load(open(filename, 'rb'))
-        clf_SVM = pickle.load(open(filename_SVM, 'rb'))
+        print("before filename specified")
+        filename = os.path.join(BASE_DIR, 'main/models/LinearRegressionClassifier.sav')
+        filename_KNeighbors = os.path.join(BASE_DIR, 'main/models/KNeighborsClassifier.sav')
+        filename_SVM = os.path.join(BASE_DIR, 'main/models/SVMClassifier.sav')
+        print("before classifier init")
+        print("file name k neightbors: " + filename_KNeighbors)
+        clf_KNeighbors = ""
+        try:
+            clf_KNeighbors = pickle.load(open(filename_KNeighbors, 'rb'))
+        except BaseException as e:
+            print(str(e))
+        print("opened k neighbors")
+        try:
+            clf = pickle.load(open(filename, 'rb'))
+        except Exception:
+            print(Exception)
+        print("opened k lin")
+        try:
+            clf_SVM = pickle.load(open(filename_SVM, 'rb'))
+        except Exception as e:
+            print(str(e))
+        print("opened k svm")
+        print("after classifier init")
         current_direction = data["current_direction"]
         # catch errors
+        print("before current direction is none")
         if current_direction is None:
             current_direction = 0
         prediction_data = np.array([[round(data["angleToItem"], 2), round(data["distanceToItem"], 2),
                                      current_direction, data["current_direction_top_blocked"],
                                      data["current_direction_right_blocked"], data["current_direction_bottom_blocked"],
                                      data["current_direction_left_blocked"]]])
+        print("after prediction data preparation")
         prediction_data = prediction_data.reshape(len(prediction_data), -1)
-        # direction = clf.predict(prediction_data)
-        direction = clf_KNeighbors.predict(prediction_data)
-        # direction = clf_SVM.predict(prediction_data)
-        direction = round(direction[0])
+        direction = 0
+        try:
+            # direction = clf.predict(prediction_data)
+            # print("after clf linear")
+            direction = clf_KNeighbors.predict(prediction_data)
+            print("after clf k neighbors predict")
+            # direction = clf_SVM.predict(prediction_data)
+            # print("after clf svm neighbors predict")
+            direction = round(direction[0])
+        except Exception as e:
+            print(e)
+        print("direction: " + str(direction))
 
         # if the predicted direction is going to a blocked direction then randomize the direction
         counter = 0
@@ -65,4 +93,5 @@ class PredictSnakeDirection(APIView):
             # to avoid infinite loop give up after some loops
             if counter == 500:
                 break
+        print(direction)
         return Response({"direction": direction})

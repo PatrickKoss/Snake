@@ -3,5 +3,5 @@ export const config = {
   appId: "snake",
 
   // endpoint of the rest api
-  apiEndpoint: "http://127.0.0.1:8000",
+  apiEndpoint: process.env.VUE_APP_BACKEND_URL || "http://127.0.0.1:8000",
 };

@@ -6,9 +6,10 @@ import store from './store'
 import VueSocketIOExt from 'vue-socket.io-extended';
 import io from 'socket.io-client';
 import Vuelidate from 'vuelidate';
+import {config} from "./config";
 
 Vue.config.productionTip = false;
-const socket = io('http://localhost', {
+const socket = io(config.apiServerUrl, {
   reconnection: true,
   reconnectionDelay: 1000,
   reconnectionDelayMax: 5000,

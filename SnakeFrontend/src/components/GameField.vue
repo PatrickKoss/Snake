@@ -52,6 +52,7 @@
      */
     @Socket('game-field')
     getGameField(gameField) {
+      console.log(gameField);
       this.gameField = gameField;
       this.snakeBlocks = [];
       for (let i = 0; i < this.gameField.snakes.length; i++) {
@@ -90,6 +91,7 @@
      */
     mounted() {
       this.$socket.client.connect();
+      console.log("in game field");
       // send the token
       this.$socket.client.emit('connected', this.state.token);
       window.addEventListener('keydown', this.keyDown, false);

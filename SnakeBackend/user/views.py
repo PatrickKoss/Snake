@@ -13,12 +13,17 @@ from .utils.Message import Message
 # login route
 class Login(APIView):
     def post(self, request):
+        print("start login")
         data = json.loads(request.body)
         username = data['username']
         password = data['password']
+        print("username: " + username)
+        print("password: " + password)
         user = authenticate(request, username=username, password=password)
+        print("after authenticate")
+        print(user)
         response = {}
-        message = Message("success", f"Successfully logged in: {data['username']}")
+        message = Message("error", f"Something went wrong")
         # check if user exists
         if user is not None:
             # get or generate token for authentication later
@@ -33,6 +38,7 @@ class Login(APIView):
             response = {"message": message.repr_json()}
         json_rep = json.dumps(response, cls=ComplexEncoder)
         json_rep = json.loads(json_rep)
+        print(json_rep)
         return Response(json_rep)
 
 
@@ -84,7 +90,7 @@ class GetAuthenticated(APIView):
 class Register(APIView):
     def post(self, request):
         data = json.loads(request.body)
-        message = Message("success", f"Welcome {data['username']}")
+        message = Message("error", f"Something went wrong")
         response = {}
         # validate user
         serialized_user = UserSerializer(data=data)
@@ -95,6 +101,7 @@ class Register(APIView):
                                             password=data['password'])
             token, created = Token.objects.get_or_create(user=user)
             user = UserSerializer(user).data
+            message = Message("success", f"Welcome {data['username']}")
             response = {"message": message.repr_json(), "token": token.key, 'user': user}
         else:
             message = Message("error", "")
@@ -114,7 +121,7 @@ class DeleteUser(APIView):
             user = Token.objects.get(key=request.headers.get('Authorization'))
         except Token.DoesNotExist:
             print(Token.DoesNotExist)
-        message = Message("success", f"Successfully deleted account")
+        message = Message("error", f"Something went wrong")
         if user is None:
             message = Message("error", f"Can´t delete the user since the authorization failed")
         else:
@@ -138,7 +145,7 @@ class UpdateUser(APIView):
         except Token.DoesNotExist:
             print(Token.DoesNotExist)
         response = {}
-        message = Message("success", f"Successfully updated account: {data['username']}")
+        message = Message("error", f"Something went wrong")
         if user is not None:
             serialized_user = UserSerializer(data=data)
             # validate the user and make sure that the user exists error is ignored when the username is the same as in
@@ -153,6 +160,7 @@ class UpdateUser(APIView):
                 # create or get user just in case
                 token, created = Token.objects.get_or_create(user=user)
                 user = UserSerializer(user).data
+                message = Message("success", f"Successfully updated account: {data['username']}")
                 response = {"message": message.repr_json(), "token": token.key, 'user': user}
             else:
                 message = Message("error", "")

@@ -32,7 +32,7 @@
       </v-row>
       <v-row class="loginPadding">
         <v-col align="end" cols="12" justify="end">
-          <v-btn @click="submit()" color="primary" type="submit">Login</v-btn>
+          <v-btn @click="login()" color="primary">Login</v-btn>
         </v-col>
       </v-row>
     </v-form>
@@ -71,13 +71,14 @@
      */
     mounted() {
       if (this.state.token !== "") this.$router.push("/");
+      window.addEventListener('keydown', this.keyDown, false);
     }
 
     /**
      * login logic. Check input values if they are correct and throw errors if not
      * @returns {Promise<void>}
      */
-    async submit() {
+    async login() {
       this.usernameErrors = [];
       this.passwordErrors = [];
       !this.$v.username.required && this.usernameErrors.push('Username is required');
@@ -92,6 +93,14 @@
           await login(res.user, res.token);
         }
       }
+    }
+
+    /**
+     * check if enter was clicked to submit
+     * @param e
+     */
+    keyDown(e) {
+      if (e.key === "Enter") this.login();
     }
 
     /**
@@ -110,6 +119,13 @@
     @Watch("username")
     __resetUsernameErrors() {
       this.usernameErrors = [];
+    }
+
+    /**
+     * clean up logic
+     */
+    beforeDestroy() {
+      window.removeEventListener("keydown", this.keyDown, false);
     }
   }
 

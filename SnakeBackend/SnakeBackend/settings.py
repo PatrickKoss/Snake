@@ -1,4 +1,5 @@
 import os
+import sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -12,16 +13,20 @@ SECRET_KEY = 'ld(mxc@n0(us##^nf$*&28(9tf)g*-8v7971@61ka&ho^&0u*&'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+sys.path.append("..")
+
+ALLOWED_HOSTS = ["*"]
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = False
-CORS_ORIGIN_WHITELIST = [
-    'http://localhost:8080',
-]
-CORS_ORIGIN_REGEX_WHITELIST = [
-    'http://localhost:8080',
-]
+# CORS_ORIGIN_WHITELIST = [
+#     'http://localhost:8080',
+#     "*",
+# ]
+# CORS_ORIGIN_REGEX_WHITELIST = [
+#     'http://localhost:8080',
+#     "*",
+# ]
 
 # Application definition
 
@@ -75,12 +80,31 @@ WSGI_APPLICATION = 'SnakeBackend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
+
+if len(sys.argv) >= 2 and sys.argv[1] == 'test':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get("DB_NAME", 'postgres'),
+            'USER': os.environ.get('DB_USER', 'postgres'),
+            'HOST': os.environ.get('DB_HOST', 'db'),  # set in docker-compose.yml
+            'PORT': os.environ.get('DB_PORT', 5432),  # default postgres port
+            'PASSWORD': os.environ.get("DB_PASSWORD", "")
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators

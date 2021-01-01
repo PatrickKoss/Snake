@@ -3,16 +3,23 @@ import pickle
 
 import numpy as np
 import pandas as pd
-from sklearn import neighbors, preprocessing
+from sklearn import neighbors
 from sklearn.model_selection import train_test_split
 
-from SnakeBackend.settings import STATIC_ROOT
+# from SnakeBackend.settings import STATIC_ROOT
+#
+# filename_SVM = os.path.join(STATIC_ROOT, 'main/data/SVMClassifier.sav')
+# filename_KNeighbors = os.path.join(STATIC_ROOT, 'main/data/KNeighborsClassifier.sav')
+# filename = os.path.join(STATIC_ROOT, 'main/data/LinearRegressionClassifier.sav')
 
-filename_SVM = os.path.join(STATIC_ROOT, 'main/data/SVMClassifier.sav')
-filename_KNeighbors = os.path.join(STATIC_ROOT, 'main/data/KNeighborsClassifier.sav')
-filename = os.path.join(STATIC_ROOT, 'main/data/LinearRegressionClassifier.sav')
+# csv = os.path.join(STATIC_ROOT, 'main/data/snakeDataAll.csv')
 
-csv = os.path.join(STATIC_ROOT, 'main/data/snakeDataAll.csv')
+module_dir = os.path.dirname(__file__)
+filename_SVM = os.path.join(module_dir, '../static/main/data/SVMClassifier.sav')
+filename_KNeighbors = os.path.join(module_dir, '../static/main/data/KNeighborsClassifier.sav')
+filename = os.path.join(module_dir, '../static/main/data/LinearRegressionClassifier.sav')
+csv = os.path.join(module_dir, '../static/main/data/snakeDataAll.csv')
+
 df = pd.read_csv(csv, encoding="utf-8", index_col=False)
 
 # drop all nan values

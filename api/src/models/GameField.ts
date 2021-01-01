@@ -120,28 +120,40 @@ export class GameField {
 
       // if the ai is involved then get the prediction of the ai
       if (mode === "AIAlone") {
-        let res = await SnakeRestClient.predictSnakeDirection({
-          angleToItem: snake.angleToItem,
-          distanceToItem: snake.distanceToItem,
-          current_direction: snake.current_direction,
-          current_direction_top_blocked: snake.current_direction_top_blocked,
-          current_direction_right_blocked: snake.current_direction_right_blocked,
-          current_direction_bottom_blocked: snake.current_direction_bottom_blocked,
-          current_direction_left_blocked: snake.current_direction_left_blocked
-        });
+        let res: any = {data: {direction: 2}};
+        try {
+          res = await SnakeRestClient.predictSnakeDirection({
+            angleToItem: snake.angleToItem,
+            distanceToItem: snake.distanceToItem,
+            current_direction: snake.current_direction,
+            current_direction_top_blocked: snake.current_direction_top_blocked,
+            current_direction_right_blocked: snake.current_direction_right_blocked,
+            current_direction_bottom_blocked: snake.current_direction_bottom_blocked,
+            current_direction_left_blocked: snake.current_direction_left_blocked
+          });
+        }
+        catch (e) {
+          console.log(2)
+        }
         directions[this.snakes.indexOf(snake)] = Math.abs(Math.round(res.data.direction));
       }
 
       if (mode === "VsAI") {
-        let res = await SnakeRestClient.predictSnakeDirection({
-          angleToItem: snake.angleToItem,
-          distanceToItem: snake.distanceToItem,
-          current_direction: snake.current_direction,
-          current_direction_top_blocked: snake.current_direction_top_blocked,
-          current_direction_right_blocked: snake.current_direction_right_blocked,
-          current_direction_bottom_blocked: snake.current_direction_bottom_blocked,
-          current_direction_left_blocked: snake.current_direction_left_blocked
-        });
+        let res: any = {data: {direction: 2}};
+        try {
+          res = await SnakeRestClient.predictSnakeDirection({
+            angleToItem: snake.angleToItem,
+            distanceToItem: snake.distanceToItem,
+            current_direction: snake.current_direction,
+            current_direction_top_blocked: snake.current_direction_top_blocked,
+            current_direction_right_blocked: snake.current_direction_right_blocked,
+            current_direction_bottom_blocked: snake.current_direction_bottom_blocked,
+            current_direction_left_blocked: snake.current_direction_left_blocked
+          });
+        }
+        catch (e) {
+          console.log(2)
+        }
         directions[1] = Math.abs(Math.round(res.data.direction));
       }
       // update the snakes position

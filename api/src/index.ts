@@ -9,14 +9,15 @@ process.env.PORT = process.env.PORT || "3000";
 // initialize the socket io server
 const app = new App(router).express;
 let server = require('http').Server(app);
-let io = require('socket.io')(server);
+let io = require('socket.io').listen(server);
 
-server.listen(80);
+server.listen(3000);
 // const apiEndpoint = "http://127.0.0.1:8000";
 
 // handle the connection to the server
 io.on('connection', async function (socket) {
   // define the variables needed for the game
+  console.log("connection");
   let directions = [];
   directions.push(0);
   let gameField: GameField = new GameField(directions, 20, 20);
@@ -28,10 +29,12 @@ io.on('connection', async function (socket) {
   let userToken = "";
   // send the entire game field to the frontend
   socket.emit("game-field", gameField);
+  console.log("after emit game-field");
   // to optimize the runtime, send only snakes and item for updating the game
   socket.emit("updated-snakes", {snakes: gameField.snakes, item: gameField.item});
   // init the game based on the options which was sent by the frontend
   socket.on('init-game', function () {
+    console.log("init game");
     directions = [];
     directions.push(0);
     gameField = new GameField(directions, gameFieldSize, gameFieldSize);
@@ -42,6 +45,7 @@ io.on('connection', async function (socket) {
 
   // when a user connects to the server get his user token for writing his score in the database once the game is over
   socket.on('connected', function (token) {
+    console.log("connected");
     userToken = token;
     // in the future you might to release a competitive mode. Then you need to put users in one room. Maybe ...
     socket.join("room");
@@ -51,6 +55,7 @@ io.on('connection', async function (socket) {
   // get the start game event from the client. Then init the gamefield again and start the game by constantly updating
   // the gamefield after a period defined by the client.
   socket.on("startGame", function (mode) {
+    console.log("start game");
     if (mode) {
       gameMode = mode;
     }
@@ -123,6 +128,7 @@ io.on('connection', async function (socket) {
 
   // set up the gamefield for the vs AI mode
   socket.on('vsAI', function (data) {
+    console.log("vs ai");
     directions = [];
     directions.push(0);
     directions.push(2);

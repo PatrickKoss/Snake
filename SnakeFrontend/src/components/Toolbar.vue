@@ -81,7 +81,7 @@
      * navigate to privacy policy
      */
     goToDataProtection() {
-      this.$router.push("/data-protection")
+      window.location = "http://patrick-koss.de/#/privacy-policy";
     }
 
     /**
@@ -110,7 +110,7 @@
   }
 
   .light {
-    background-color: #f2f2f2 !important;
+    background-color: lightgrey !important;
   }
 
   .dark {

@@ -26,5 +26,7 @@ export async function login(user, token) {
   store.state.token = token;
   store.state.user = user;
   localStorage.token = store.state.token;
-  await router.push("/");
+  setTimeout(async () => {
+    await router.push("/");
+  }, 50)
 }

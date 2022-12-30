@@ -38,7 +38,7 @@
         "@types/morgan": "^1.9.2",
         "@types/node": "^12.6.2",
         "chai": "^4.2.0",
-        "mocha": "^6.2.3",
+        "mocha": "^10.2.0",
         "nodemon": "^1.19.4",
         "rimraf": "^2.7.1",
         "sinon": "^7.5.0",
